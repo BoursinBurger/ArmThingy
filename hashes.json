@@ -1,0 +1,50 @@
+{
+  "Equipment": {
+    "Helmet": {
+      "5023912317133595745": "Plain Head",
+      "1119876781446562321": "Rusty Helmet",
+      "6743989806668463792": "Heart Burn",
+      "11532584307764410729": "Head Bomb",
+      "17030651912610477549": "Aerodynamic"
+    },
+    "Torso": {
+      "5670864085995171669": "Plain Clothes",
+      "7254238353753421700": "Rusty Torso",
+      "17755807016762153521": "Jet Boots"
+    },
+    "Glove": {
+      "3508148291339889543": "Rusty Glove",
+      "10408606255428090075": "Polished Glove",
+      "546231460498266322": "Piercing Knuckle"
+    }
+  },
+  "Missions": {
+    "17649277184587644947": "Knuckle Jet 101",
+    "8584653936597956673": "Downtown Shabby",
+    "17332622330128376549": "Nitro Depot",
+    "4528015868356905974": "Deadlock Junction",
+    "17359130395434590752": "Geargrind Yard",
+    "10001490889680087502": "Tychoon Industries",
+    "12968775585785538526": "Tychoon Industries Interior",
+    "18376823651974639012": "Jumbled Junkyards",
+    "17161265228518624139": "Motorland's Mechanical Sewers",
+    "18013748703148071501": "Smogway District",
+    "1757867414089627951": "The Freefall Fissure",
+    "13206398160420083321": "Chainlink Traversal",
+    "15416264056549931914": "Ledergans",
+    "2725272545411759999": "Ratrich's Junkcut",
+    "15818544000612556108": "Geargrind Complex"
+  },
+  "Cutscenes": {
+    "4144454145041428872": "Intro",
+    "4104608507147099525": "",
+    "2143974242145142874": "",
+    "628185036598657552": "",
+    "9471016675166627945": ""
+  },
+  "Dialogues": {
+    "79a165bd303f0ddb58c293aad9618fa1": "",
+    "3328b2895a995914f90d7a301c1e0b84": "",
+    "b2df7a80912ac10449bfc322246ac3ce": ""
+  }
+}
