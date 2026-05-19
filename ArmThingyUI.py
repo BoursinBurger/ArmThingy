@@ -14,6 +14,11 @@ class ArmThingyUI:
         self.cwd = Path(__file__).parent
         self.icon_path = self.cwd / "ArmThingyIcon.png"
         self.hash_map_path = self.cwd / "hashes.json"
+        appdata = os.getenv("APPDATA")
+        if not appdata:
+            showerror("Error", "APPDATA environment variable not found. Is this not a Windows machine?")
+            return
+        self.save_file_path = (Path(appdata) / "../LocalLow/Rain/Knuckle Jet/saves.kj").resolve()
 
         # Main Window
         self.main_window = root
@@ -78,12 +83,11 @@ class ArmThingyUI:
         self.main_window.mainloop()
 
     def load_save_data(self):
-        save_file_path = (Path(os.getenv("APPDATA")) / "../LocalLow/Rain/Knuckle Jet/saves.kj").resolve()
-        if not save_file_path.exists():
-            showerror("Error", f"Knuckle Jet save file not found:\n{save_file_path}")
+        if not self.save_file_path.exists():
+            showerror("Error", f"Knuckle Jet save file not found:\n{self.save_file_path}")
             return
 
-        with save_file_path.open("r") as save_handle:
+        with self.save_file_path.open("r") as save_handle:
             save_json = json.load(save_handle)
 
         slots = save_json.get("slots")
@@ -148,7 +152,7 @@ class ArmThingyUI:
             hash_json = json.load(hash_handle)
         self.hash_map = self.flatten(hash_json)
 
-    def save_slot_selected(self, event=None):
+    def save_slot_selected(self, _):
         slot_index = self.selector_combobox.current()
         if slot_index != -1 and slot_index < len(self.save_slots):
             save_slot = self.save_slots[slot_index]
@@ -156,3 +160,4 @@ class ArmThingyUI:
 
     def refresh_save_slots(self):
         self.load_save_data()
+        self.save_slot_selected(None)
