@@ -24,31 +24,12 @@ class SaveSlot:
     current_knaus_torso_id: str
     current_knaus_glove_id: str
     unlocked_equipment: list[str]
-    
+
+    @staticmethod
+    def camel_case_to_snake_case(string: str) -> str:
+        return ''.join(['_' + i.lower() if i.isupper() else i for i in string]).lstrip('_')
+
     def __init__(self, kwargs):
-        json_to_object_map = {
-            "currentVersion": "current_version",
-            "dateModified": "date_modified",
-            "timeSpent": "time_spent",
-            "completedMissions": "completed_missions",
-            "missionsShownInWarRoom": "missions_shown_in_war_room",
-            "missionStats": "mission_stats",
-            "seenCutscenes": "seen_cutscenes",
-            "seenDialogues": "seen_dialogues",
-            "currency": "currency",
-            "numChallengeCoins": "num_challenge_coins",
-            "unlockedChallengeMissions": "unlocked_challenge_missions",
-            "equipmentState": "equipment_state",
-            "rescuedOrphans": "rescued_orphans",
-            "permanentPickups": "permanent_pickups",
-            "currentAnastasiaHelmetId": "current_anastasia_helmet_id",
-            "currentAnastasiaTorsoId": "current_anastasia_torso_id",
-            "currentAnastasiaGloveId": "current_anastasia_glove_id",
-            "currentKnausHelmetId": "current_knaus_helmet_id",
-            "currentKnausTorsoId": "current_knaus_torso_id",
-            "currentKnausGloveId": "current_knaus_glove_id",
-            "unlockedEquipment": "unlocked_equipment",
-        }
 
         int_to_string = ["currentAnastasiaHelmetId", "currentAnastasiaTorsoId", "currentAnastasiaGloveId",
                          "currentKnausHelmetId", "currentKnausTorsoId", "currentKnausGloveId"]
@@ -59,7 +40,7 @@ class SaveSlot:
         arrays = ["missionStats", "equipmentState"]
 
         for key, value in kwargs.items():
-            attr = json_to_object_map.get(key)
+            attr = self.camel_case_to_snake_case(key)
             if attr is not None:
 
                 match key:
