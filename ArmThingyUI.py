@@ -9,6 +9,9 @@ from SaveSlot import SaveSlot
 
 class ArmThingyUI:
 
+    v12_filename = "defaultSaveFile.saveDataSlot"
+    v14_filename = "saves.kj"
+
     def __init__(self, root):
         # Path declarations
         self.cwd = Path(__file__).parent
@@ -18,7 +21,10 @@ class ArmThingyUI:
         if not appdata:
             showerror("Error", "APPDATA environment variable not found. Is this not a Windows machine?")
             return
-        self.save_file_path = (Path(appdata) / "../LocalLow/Rain/Knuckle Jet/saves.kj").resolve()
+        self.save_directory = (Path(appdata) / "../LocalLow/Rain/Knuckle Jet").resolve()
+        self.save_file_v12 = self.save_directory / self.v12_filename
+        self.save_file_v14 = self.save_directory / self.v14_filename
+        self.save_file_path = None
 
         # Main Window
         self.main_window = root
@@ -27,25 +33,50 @@ class ArmThingyUI:
         self.icon = tk.PhotoImage(file=self.icon_path)
         self.main_window.iconphoto(True, self.icon)
 
+        # Save File Selector Frame
+        self.file_frame = ttk.Frame(self.main_window, padding=5)
+        self.file_frame.pack(fill=tk.X)
+
+        self.file_radio_label = ttk.Label(self.file_frame, text="Select Save File:")
+        self.file_radio_label.pack(side=tk.LEFT)
+
+        self.file_radio_var = tk.StringVar()
+        self.file_radio_v12 = ttk.Radiobutton(self.file_frame,
+                                              text=self.v12_filename,
+                                              variable=self.file_radio_var,
+                                              value=self.v12_filename,
+                                              command=self.radio_button_selection)
+        self.file_radio_v14 = ttk.Radiobutton(self.file_frame,
+                                              text=self.v14_filename,
+                                              variable=self.file_radio_var,
+                                              value=self.v14_filename,
+                                              command=self.radio_button_selection)
+        self.file_radio_v12.pack(side=tk.LEFT, padx=5)
+        self.file_radio_v14.pack(side=tk.LEFT, padx=5)
+
+        self.file_refresh = ttk.Button(self.file_frame,
+                                       text="Refresh",
+                                       command=self.refresh_save_slots)
+        self.file_refresh.pack(side=tk.LEFT, padx=5)
+
         # Save Slot Selector Frame
-        self.selector_frame = ttk.Frame(self.main_window, padding=10)
-        self.selector_frame.pack(fill=tk.X)
+        self.slot_frame = ttk.Frame(self.main_window, padding=5)
+        self.slot_frame.pack(fill=tk.X)
 
-        self.selector_label = ttk.Label(self.selector_frame, text="Select Save Slot:")
-        self.selector_label.pack(side=tk.LEFT)
 
-        self.selector_text = tk.StringVar()
-        self.selector_combobox = ttk.Combobox(self.selector_frame,
-                                              textvariable=self.selector_text,
-                                              state="readonly",
-                                              width=40)
-        self.selector_combobox.pack(side=tk.LEFT, padx=10)
-        self.selector_combobox.bind("<<ComboboxSelected>>", self.save_slot_selected)
 
-        self.selector_refresh = ttk.Button(self.selector_frame,
-                                           text="Refresh",
-                                           command=self.refresh_save_slots)
-        self.selector_refresh.pack(side=tk.LEFT, padx=5)
+        self.slot_combobox_label = ttk.Label(self.slot_frame, text="Select Save Slot:")
+        self.slot_combobox_label.pack(side=tk.LEFT)
+
+        self.slot_var = tk.StringVar()
+        self.slot_combobox = ttk.Combobox(self.slot_frame,
+                                          textvariable=self.slot_var,
+                                          state="readonly",
+                                          width=40)
+        self.slot_combobox.pack(side=tk.LEFT, padx=10)
+        self.slot_combobox.bind("<<ComboboxSelected>>", self.save_slot_selected)
+
+
 
         # Text Frame
         self.text_frame = ttk.Frame(self.main_window, padding=10)
@@ -79,8 +110,37 @@ class ArmThingyUI:
 
     def run(self):
         self.load_hash_map()
-        self.load_save_data()
+        self.check_save_paths()
         self.main_window.mainloop()
+
+    def radio_button_selection(self):
+        selected_var = self.file_radio_var.get()
+
+        if selected_var == self.v12_filename:
+            self.save_file_path = self.save_file_v12
+        elif selected_var == self.v14_filename:
+            self.save_file_path = self.save_file_v14
+        else:
+            showerror("Error", "No save slot selected")
+            return
+        self.load_save_data()
+
+    def check_save_paths(self):
+        if self.save_file_v12.exists() and self.save_file_v14.exists():
+            self.file_radio_v12.config(state='normal')
+            self.file_radio_v14.config(state='normal')
+        elif self.save_file_v12.exists():
+            self.save_file_path = self.save_file_v12
+            self.file_radio_v12.config(state='normal')
+            self.file_radio_v14.config(state='disabled')
+            self.file_radio_v12.invoke()
+        elif self.save_file_v14.exists():
+            self.save_file_path = self.save_file_v14
+            self.file_radio_v12.config(state='disabled')
+            self.file_radio_v14.config(state='normal')
+            self.file_radio_v14.invoke()
+        else:
+            showerror("Error", "No save files found")
 
     def load_save_data(self):
         if not self.save_file_path.exists():
@@ -90,10 +150,15 @@ class ArmThingyUI:
         with self.save_file_path.open("r") as save_handle:
             save_json = json.load(save_handle)
 
-        slots = save_json.get("slots")
-        if slots is None:
-            showerror("Error", "Save file does not contain 'slots' key")
-            return
+        # Determine save file format:
+        # v12 save file format consists of a single save slot
+        # v14 save file format consists of multiple save slots
+        if "slots" in save_json:
+            slots = save_json.get("slots")
+            save_format = "v14"
+        else:
+            slots = [save_json]
+            save_format = "v12"
 
         save_slots = []
         for slot in slots:
@@ -102,9 +167,19 @@ class ArmThingyUI:
         self.save_slots = save_slots
 
         combobox_values = []
-        for index, save_slot in enumerate(self.save_slots):
-            combobox_values.append(f"Slot #{index}: {save_slot.date_modified}")
-        self.selector_combobox["values"] = combobox_values
+        # For v14 save file format, create combobox values with slot index and date modified
+        # For v12 save file format, create a single default combobox value
+        if save_format == "v14":
+            for index, save_slot in enumerate(self.save_slots):
+                combobox_values.append(f"Slot #{index}: {save_slot.date_modified}")
+        else:
+            combobox_values.append("Default")
+        self.slot_combobox["values"] = combobox_values
+
+        # If only one slot exists, select its combobox entry by default
+        if len(self.save_slots) == 1:
+            self.slot_combobox.current(0)
+            self.slot_combobox.event_generate("<<ComboboxSelected>>")
 
     def apply_hash_map(self, obj):
         match obj:
@@ -153,7 +228,7 @@ class ArmThingyUI:
         self.hash_map = self.flatten(hash_json)
 
     def save_slot_selected(self, _):
-        slot_index = self.selector_combobox.current()
+        slot_index = self.slot_combobox.current()
         if slot_index != -1 and slot_index < len(self.save_slots):
             save_slot = self.save_slots[slot_index]
             self.display_save_slot(save_slot)
