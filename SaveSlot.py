@@ -27,12 +27,16 @@ class SaveSlot:
 
     @staticmethod
     def camel_case_to_snake_case(string: str) -> str:
-        return ''.join(['_' + i.lower() if i.isupper() else i for i in string]).lstrip('_')
+        # Match an uppercase letter that follows a lowercase letter/digit and separate with underscore
+        s1 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', string)
+        # Match multiple consecutive uppercase letters followed by a lowercase letter and separate with underscore
+        s2 = re.sub('([A-Z]+)([A-Z][a-z])', r'\1_\2', s1)
+        return s2.lower()
 
     def __init__(self, kwargs):
 
-        int_to_string = ["currentAnastasiaHelmetId", "currentAnastasiaTorsoId", "currentAnastasiaGloveId",
-                         "currentKnausHelmetId", "currentKnausTorsoId", "currentKnausGloveId"]
+        int_to_string = ["currentAnastasiaHelmetID", "currentAnastasiaTorsoID", "currentAnastasiaGloveID",
+                         "currentKnausHelmetID", "currentKnausTorsoID", "currentKnausGloveID"]
 
         int_lists = ["completedMissions", "missionsShownInWarRoom", "seenCutscenes",
                      "unlockedChallengeMissions", "permanentPickups"]

@@ -8,7 +8,6 @@ from SaveSlot import SaveSlot
 
 
 class ArmThingyUI:
-
     v12_filename = "defaultSaveFile.saveDataSlot"
     v14_filename = "saves.kj"
 
@@ -63,8 +62,6 @@ class ArmThingyUI:
         self.slot_frame = ttk.Frame(self.main_window, padding=5)
         self.slot_frame.pack(fill=tk.X)
 
-
-
         self.slot_combobox_label = ttk.Label(self.slot_frame, text="Select Save Slot:")
         self.slot_combobox_label.pack(side=tk.LEFT)
 
@@ -75,8 +72,6 @@ class ArmThingyUI:
                                           width=40)
         self.slot_combobox.pack(side=tk.LEFT, padx=10)
         self.slot_combobox.bind("<<ComboboxSelected>>", self.save_slot_selected)
-
-
 
         # Text Frame
         self.text_frame = ttk.Frame(self.main_window, padding=10)
@@ -198,7 +193,16 @@ class ArmThingyUI:
 
     @staticmethod
     def snake_case_to_human_case(snake_case_str):
-        return ' '.join(word.capitalize() for word in snake_case_str.split('_'))
+        output_words = []
+        words = snake_case_str.split('_')
+        for word in words:
+            # Words that are fully uppercase
+            if word in ("id",):
+                output_words.append(word.upper())
+            # Words to capitalize first letter only
+            else:
+                output_words.append(word.capitalize())
+        return ' '.join(output_words)
 
     def display_save_slot(self, save_slot_obj):
         display_dict = {}
