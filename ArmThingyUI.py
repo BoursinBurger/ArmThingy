@@ -13,6 +13,11 @@ class ArmThingyUI:
     v14_filename = "saves.kj"
 
     def __init__(self, root):
+        """
+        Initialize the UI components and set up the application window
+        :param root: Tkinter root window
+        """
+        
         # Path declarations
         self.cwd = Path(__file__).parent
         self.icon_path = self.cwd / "ArmThingyIcon.png"
@@ -45,18 +50,18 @@ class ArmThingyUI:
                                               text=self.v12_filename,
                                               variable=self.file_radio_var,
                                               value=self.v12_filename,
-                                              command=self.radio_button_selection)
+                                              command=self.event_radio_button_selection)
         self.file_radio_v14 = ttk.Radiobutton(self.file_frame,
                                               text=self.v14_filename,
                                               variable=self.file_radio_var,
                                               value=self.v14_filename,
-                                              command=self.radio_button_selection)
+                                              command=self.event_radio_button_selection)
         self.file_radio_v12.pack(side=tk.LEFT, padx=5)
         self.file_radio_v14.pack(side=tk.LEFT, padx=5)
 
         self.file_refresh = ttk.Button(self.file_frame,
                                        text="Refresh",
-                                       command=self.refresh_save_slots)
+                                       command=self.event_refresh_button_click)
         self.file_refresh.pack(side=tk.LEFT, padx=5)
 
         # Save Slot Selector Frame
@@ -72,7 +77,7 @@ class ArmThingyUI:
                                           state="readonly",
                                           width=40)
         self.slot_combobox.pack(side=tk.LEFT, padx=10)
-        self.slot_combobox.bind("<<ComboboxSelected>>", self.save_slot_selected)
+        self.slot_combobox.bind("<<ComboboxSelected>>", self.event_save_slot_selection)
 
         # Text Frame
         self.text_frame = ttk.Frame(self.main_window, padding=10)
@@ -107,24 +112,11 @@ class ArmThingyUI:
         # Hash Map
         self.hash_map: dict[str, str] = {}
 
-    def run(self):
-        self.load_hash_map()
-        self.check_save_paths()
-        self.main_window.mainloop()
-
-    def radio_button_selection(self):
-        selected_var = self.file_radio_var.get()
-
-        if selected_var == self.v12_filename:
-            self.save_file_path = self.save_file_v12
-        elif selected_var == self.v14_filename:
-            self.save_file_path = self.save_file_v14
-        else:
-            showerror("Error", "No save slot selected")
-            return
-        self.load_save_data()
-
     def check_save_paths(self):
+        """
+        Check for save file existence and configure radio buttons accordingly
+        :return:
+        """
         if self.save_file_v12.exists() and self.save_file_v14.exists():
             self.file_radio_v12.config(state=tk.NORMAL)
             self.file_radio_v14.config(state=tk.NORMAL)
@@ -142,6 +134,10 @@ class ArmThingyUI:
             showerror("Error", "No save files found")
 
     def load_save_data(self):
+        """
+        Load save data from the selected save file path and populate the save slots in the combobox
+        :return:
+        """
         if not self.save_file_path.exists():
             showerror("Error", f"Knuckle Jet save file not found:\n{self.save_file_path}")
             return
@@ -191,7 +187,45 @@ class ArmThingyUI:
                 self.text_box.delete(1.0, tk.END)
                 self.text_box.config(state=tk.DISABLED)
 
+    def display_save_slot(self, save_slot_obj):
+        """
+        Display the contents of the selected save slot object in a human-readable format in the Text widget
+        :param save_slot_obj: Save slot object to display
+        :return:
+        """
+        display_dict = {}
+        for key, value in save_slot_obj.__dict__.items():
+            if key.startswith("_"):
+                continue
+            # Convert snake_case attributes of the object to human-readable format
+            display_dict[snake_case_to_human_case(key)] = self.apply_hash_map(value)
+
+        self.text_box.config(state=tk.NORMAL)
+        self.text_box.delete(1.0, tk.END)
+        self.text_box.insert(tk.END, json.dumps(display_dict, indent=4, default=str))
+        self.text_box.config(state=tk.DISABLED)
+
+    def load_hash_map(self):
+        """
+        Load the hash map from the JSON file path and flatten it for use in the application.
+        :return:
+        """
+        if not self.hash_map_path.exists():
+            showerror("Error", f"Hash Map file not found:\n{self.hash_map_path}")
+            return
+        with self.hash_map_path.open("r") as hash_handle:
+            hash_json = json.load(hash_handle)
+        self.hash_map = flatten(hash_json)
+
     def apply_hash_map[T](self, obj: T) -> T:
+        """
+        Recursively apply the hash map to nested objects, preserving structure and replacing matching hashes with text
+        :param obj: Object to apply the hash map to
+        :return: Object with the hash map applied
+        """
+
+        # Function behavior is determined by the input object type and returns the same type.
+        # Apply the hash map recursively to the object components until they resolve to strings.
         match obj:
             case str():
                 hashed_str = self.hash_map.get(obj, obj)
@@ -206,31 +240,46 @@ class ArmThingyUI:
             case _:
                 return obj
 
-    def display_save_slot(self, save_slot_obj):
-        display_dict = {}
-        for key, value in save_slot_obj.__dict__.items():
-            if key.startswith("_"):
-                continue
-            display_dict[snake_case_to_human_case(key)] = self.apply_hash_map(value)
-        self.text_box.config(state=tk.NORMAL)
-        self.text_box.delete(1.0, tk.END)
-        self.text_box.insert(tk.END, json.dumps(display_dict, indent=4, default=str))
-        self.text_box.config(state=tk.DISABLED)
+    def event_radio_button_selection(self):
+        """
+        Handle radio button selection for save file version: set the save file path and load save data
+        :return:
+        """
+        selected_var = self.file_radio_var.get()
 
-    def load_hash_map(self):
-        if not self.hash_map_path.exists():
-            showerror("Error", f"Hash Map file not found:\n{self.hash_map_path}")
+        if selected_var == self.v12_filename:
+            self.save_file_path = self.save_file_v12
+        elif selected_var == self.v14_filename:
+            self.save_file_path = self.save_file_v14
+        else:
+            showerror("Error", "No save slot selected")
             return
-        with self.hash_map_path.open("r") as hash_handle:
-            hash_json = json.load(hash_handle)
-        self.hash_map = flatten(hash_json)
+        self.load_save_data()
 
-    def save_slot_selected(self, _):
+    def event_save_slot_selection(self, _):
+        """
+        Handle the selection of a save slot in the combobox and display its contents.
+        :param _: Event parameter, not used
+        :return:
+        """
         slot_index = self.slot_combobox.current()
         if slot_index != -1 and slot_index < len(self.save_slots):
             save_slot = self.save_slots[slot_index]
             self.display_save_slot(save_slot)
 
-    def refresh_save_slots(self):
+    def event_refresh_button_click(self):
+        """
+        Handle the Refresh button's click event: reload the save data and update the UI.
+        :return:
+        """
         self.load_save_data()
-        self.save_slot_selected(None)
+        self.event_save_slot_selection(None)
+
+    def run(self):
+        """
+        Load the hash map from JSON, check for save files, then start running the tkinter application
+        :return:
+        """
+        self.load_hash_map()
+        self.check_save_paths()
+        self.main_window.mainloop()

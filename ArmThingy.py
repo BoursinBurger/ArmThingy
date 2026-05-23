@@ -1,7 +1,16 @@
 from ArmThingyUI import ArmThingyUI
-import tkinter as tk
+from tkinter import Tk
 
-if __name__ == "__main__":
-    root = tk.Tk()
+
+def main():
+    """
+    Entry point for the application.
+    :return:
+    """
+    root = Tk()
     ui = ArmThingyUI(root)
     ui.run()
+
+
+if __name__ == "__main__":
+    main()
