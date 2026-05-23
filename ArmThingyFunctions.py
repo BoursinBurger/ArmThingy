@@ -66,8 +66,13 @@ def camel_case_to_snake_case(string: str) -> str:
     :param string: Camel case string to be converted
     :return: Snake case string
     """
-    # Match an uppercase letter that follows a lowercase letter/digit and separate with underscore
-    s1 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', string)
-    # Match multiple consecutive uppercase letters followed by a lowercase letter and separate with underscore
-    s2 = re.sub('([A-Z]+)([A-Z][a-z])', r'\1_\2', s1)
-    return s2.lower()
+    underscore_separation = r'\1_\2'
+    # Separate lowercase from uppercase
+    s1 = re.sub('([a-z])([A-Z])', underscore_separation, string)
+    # Separate uppercase acronyms from following words
+    s2 = re.sub('([A-Z]+)([A-Z][a-z])', underscore_separation, s1)
+    # Separate letters from digits
+    s3 = re.sub(r'([a-zA-Z])(\d)', underscore_separation, s2)
+    # Separate digits from letters
+    s4 = re.sub(r'(\d)([a-zA-Z])', underscore_separation, s3)
+    return s4.lower()
