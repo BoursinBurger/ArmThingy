@@ -80,7 +80,10 @@ class ArmThingyUI:
 
         self.text_box = tk.Text(self.text_frame,
                                 wrap=tk.NONE,
-                                font=("Consolas", 12))
+                                font=("Consolas", 12),
+                                state=tk.DISABLED)
+        self.text_box.bind("<1>", lambda event: self.text_box.focus_set())
+
         self.text_scroll_x = ttk.Scrollbar(self.text_frame,
                                            orient=tk.HORIZONTAL,
                                            command=self.text_box.xview)
@@ -123,17 +126,17 @@ class ArmThingyUI:
 
     def check_save_paths(self):
         if self.save_file_v12.exists() and self.save_file_v14.exists():
-            self.file_radio_v12.config(state='normal')
-            self.file_radio_v14.config(state='normal')
+            self.file_radio_v12.config(state=tk.NORMAL)
+            self.file_radio_v14.config(state=tk.NORMAL)
         elif self.save_file_v12.exists():
             self.save_file_path = self.save_file_v12
-            self.file_radio_v12.config(state='normal')
-            self.file_radio_v14.config(state='disabled')
+            self.file_radio_v12.config(state=tk.NORMAL)
+            self.file_radio_v14.config(state=tk.DISABLED)
             self.file_radio_v12.invoke()
         elif self.save_file_v14.exists():
             self.save_file_path = self.save_file_v14
-            self.file_radio_v12.config(state='disabled')
-            self.file_radio_v14.config(state='normal')
+            self.file_radio_v12.config(state=tk.DISABLED)
+            self.file_radio_v14.config(state=tk.NORMAL)
             self.file_radio_v14.invoke()
         else:
             showerror("Error", "No save files found")
@@ -178,11 +181,15 @@ class ArmThingyUI:
         if len(self.save_slots) == 1:
             self.slot_combobox.current(0)
             self.slot_combobox.event_generate("<<ComboboxSelected>>")
-        # Otherwise, if a valid entry has not been selected, set temporary message prompting user to select a slot
+        # Otherwise, if a valid entry has not been selected,
+        # set temporary message prompting user to select a slot and clear the text box
         else:
             slot_index = self.slot_combobox.current()
             if slot_index == -1 or slot_index >= len(self.save_slots):
                 self.slot_combobox.set("Select a save slot")
+                self.text_box.config(state=tk.NORMAL)
+                self.text_box.delete(1.0, tk.END)
+                self.text_box.config(state=tk.DISABLED)
 
     def apply_hash_map[T](self, obj: T) -> T:
         match obj:
@@ -205,8 +212,10 @@ class ArmThingyUI:
             if key.startswith("_"):
                 continue
             display_dict[snake_case_to_human_case(key)] = self.apply_hash_map(value)
+        self.text_box.config(state=tk.NORMAL)
         self.text_box.delete(1.0, tk.END)
         self.text_box.insert(tk.END, json.dumps(display_dict, indent=4, default=str))
+        self.text_box.config(state=tk.DISABLED)
 
     def load_hash_map(self):
         if not self.hash_map_path.exists():
