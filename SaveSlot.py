@@ -1,5 +1,6 @@
 import re
 import datetime
+from ArmThingyFunctions import camel_case_to_snake_case
 
 
 class SaveSlot:
@@ -25,14 +26,6 @@ class SaveSlot:
     current_knaus_glove_id: str
     unlocked_equipment: list[str]
 
-    @staticmethod
-    def camel_case_to_snake_case(string: str) -> str:
-        # Match an uppercase letter that follows a lowercase letter/digit and separate with underscore
-        s1 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', string)
-        # Match multiple consecutive uppercase letters followed by a lowercase letter and separate with underscore
-        s2 = re.sub('([A-Z]+)([A-Z][a-z])', r'\1_\2', s1)
-        return s2.lower()
-
     def __init__(self, kwargs):
 
         int_to_string = ["currentAnastasiaHelmetID", "currentAnastasiaTorsoID", "currentAnastasiaGloveID",
@@ -44,7 +37,7 @@ class SaveSlot:
         arrays = ["missionStats", "equipmentState"]
 
         for key, value in kwargs.items():
-            attr = self.camel_case_to_snake_case(key)
+            attr = camel_case_to_snake_case(key)
             if attr is not None:
 
                 match key:

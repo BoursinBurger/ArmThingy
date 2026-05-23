@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 from tkinter.messagebox import showerror
 from pathlib import Path
 from SaveSlot import SaveSlot
+from ArmThingyFunctions import flatten, pretty_time_delta, snake_case_to_human_case
 
 
 class ArmThingyUI:
@@ -165,18 +166,25 @@ class ArmThingyUI:
         # For v14 save file format, create combobox values with slot index and date modified
         # For v12 save file format, create a single default combobox value
         if save_format == "v14":
-            for index, save_slot in enumerate(self.save_slots):
-                combobox_values.append(f"Slot #{index}: {save_slot.date_modified}")
+            for index, save_slot in enumerate(self.save_slots, start=1):
+                combobox_values.append(f"Slot #{index} | "
+                                       f"{save_slot.date_modified.strftime('%Y-%m-%d %H:%M:%S')} | "
+                                       f"{pretty_time_delta(save_slot.time_spent)}")
         else:
-            combobox_values.append("Default")
+            combobox_values.append("Default save slot")
         self.slot_combobox["values"] = combobox_values
 
         # If only one slot exists, select its combobox entry by default
         if len(self.save_slots) == 1:
             self.slot_combobox.current(0)
             self.slot_combobox.event_generate("<<ComboboxSelected>>")
+        # Otherwise, if a valid entry has not been selected, set temporary message prompting user to select a slot
+        else:
+            slot_index = self.slot_combobox.current()
+            if slot_index == -1 or slot_index >= len(self.save_slots):
+                self.slot_combobox.set("Select a save slot")
 
-    def apply_hash_map(self, obj):
+    def apply_hash_map[T](self, obj: T) -> T:
         match obj:
             case str():
                 hashed_str = self.hash_map.get(obj, obj)
@@ -191,37 +199,14 @@ class ArmThingyUI:
             case _:
                 return obj
 
-    @staticmethod
-    def snake_case_to_human_case(snake_case_str):
-        output_words = []
-        words = snake_case_str.split('_')
-        for word in words:
-            # Words that are fully uppercase
-            if word in ("id",):
-                output_words.append(word.upper())
-            # Words to capitalize first letter only
-            else:
-                output_words.append(word.capitalize())
-        return ' '.join(output_words)
-
     def display_save_slot(self, save_slot_obj):
         display_dict = {}
         for key, value in save_slot_obj.__dict__.items():
             if key.startswith("_"):
                 continue
-            display_dict[self.snake_case_to_human_case(key)] = self.apply_hash_map(value)
+            display_dict[snake_case_to_human_case(key)] = self.apply_hash_map(value)
         self.text_box.delete(1.0, tk.END)
         self.text_box.insert(tk.END, json.dumps(display_dict, indent=4, default=str))
-
-    @staticmethod
-    def flatten(json_dict):
-        flattened_dict = {}
-        for key, value in json_dict.items():
-            if isinstance(value, dict):
-                flattened_dict.update(ArmThingyUI.flatten(value))
-            else:
-                flattened_dict[key] = value
-        return flattened_dict
 
     def load_hash_map(self):
         if not self.hash_map_path.exists():
@@ -229,7 +214,7 @@ class ArmThingyUI:
             return
         with self.hash_map_path.open("r") as hash_handle:
             hash_json = json.load(hash_handle)
-        self.hash_map = self.flatten(hash_json)
+        self.hash_map = flatten(hash_json)
 
     def save_slot_selected(self, _):
         slot_index = self.slot_combobox.current()
