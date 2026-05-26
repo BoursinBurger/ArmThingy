@@ -38,7 +38,7 @@ class SaveSlot:
 
         # Dictionary keys with integer lists that need to be converted to string lists
         int_lists = ["completedMissions", "missionsShownInWarRoom", "seenCutscenes",
-                     "unlockedChallengeMissions", "permanentPickups"]
+                     "unlockedChallengeMissions", "rescuedOrphans", "permanentPickups"]
 
         # Dictionary keys with array structure that need to be converted to a simpler dictionary
         arrays = ["missionStats", "equipmentState"]
