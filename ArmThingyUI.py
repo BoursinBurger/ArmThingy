@@ -17,7 +17,7 @@ class ArmThingyUI:
         Initialize the UI components and set up the application window
         :param root: Tkinter root window
         """
-        
+
         # Path declarations
         self.cwd = Path(__file__).parent
         self.icon_path = self.cwd / "ArmThingyIcon.png"
@@ -77,7 +77,7 @@ class ArmThingyUI:
                                           state="readonly",
                                           width=40)
         self.slot_combobox.pack(side=tk.LEFT, padx=10)
-        self.slot_combobox.bind("<<ComboboxSelected>>", self.event_save_slot_selection)
+        self.slot_combobox.bind("<<ComboboxSelected>>", self.event_combobox_selection)
 
         # Text Frame
         self.text_frame = ttk.Frame(self.main_window, padding=10)
@@ -111,6 +111,10 @@ class ArmThingyUI:
 
         # Hash Map
         self.hash_map: dict[str, str] = {}
+
+        # Selected Combobox index
+        self.selected_slot = -1
+        self.save_format: str = ""
 
     def check_save_paths(self):
         """
@@ -150,10 +154,10 @@ class ArmThingyUI:
         # v14 save file format consists of multiple save slots
         if "slots" in save_json:
             slots = save_json.get("slots")
-            save_format = "v14"
+            self.save_format = "v14"
         else:
             slots = [save_json]
-            save_format = "v12"
+            self.save_format = "v12"
 
         save_slots = []
         for slot in slots:
@@ -161,10 +165,13 @@ class ArmThingyUI:
             save_slots.append(s)
         self.save_slots = save_slots
 
+        self.populate_combobox()
+
+    def populate_combobox(self):
         combobox_values = []
         # For v14 save file format, create combobox values with slot index and date modified
         # For v12 save file format, create a single default combobox value
-        if save_format == "v14":
+        if self.save_format == "v14":
             for index, save_slot in enumerate(self.save_slots, start=1):
                 combobox_values.append(f"Slot #{index} | "
                                        f"{save_slot.date_modified.strftime('%Y-%m-%d %H:%M:%S')} | "
@@ -175,13 +182,13 @@ class ArmThingyUI:
 
         # If only one slot exists, select its combobox entry by default
         if len(self.save_slots) == 1:
-            self.slot_combobox.current(0)
+            self.selected_slot = 0
+            self.slot_combobox.current(self.selected_slot)
             self.slot_combobox.event_generate("<<ComboboxSelected>>")
         # Otherwise, if a valid entry has not been selected,
         # set temporary message prompting user to select a slot and clear the text box
         else:
-            slot_index = self.slot_combobox.current()
-            if slot_index == -1 or slot_index >= len(self.save_slots):
+            if self.selected_slot == -1 or self.selected_slot >= len(self.save_slots):
                 self.slot_combobox.set("Select a save slot")
                 self.text_box.config(state=tk.NORMAL)
                 self.text_box.delete(1.0, tk.END)
@@ -254,26 +261,39 @@ class ArmThingyUI:
         else:
             showerror("Error", "No save slot selected")
             return
+
+        # Invalidate the selected slot
+        self.selected_slot = -1
+        # Load the data for the selected save file
         self.load_save_data()
 
-    def event_save_slot_selection(self, _):
+    def event_combobox_selection(self, _):
         """
         Handle the selection of a save slot in the combobox and display its contents.
         :param _: Event parameter, not used
         :return:
         """
-        slot_index = self.slot_combobox.current()
-        if slot_index != -1 and slot_index < len(self.save_slots):
-            save_slot = self.save_slots[slot_index]
-            self.display_save_slot(save_slot)
+        self.selected_slot = self.slot_combobox.current()
+        save_slot = self.save_slots[self.selected_slot]
+        self.display_save_slot(save_slot)
 
     def event_refresh_button_click(self):
         """
         Handle the Refresh button's click event: reload the save data and update the UI.
         :return:
         """
+        self.load_hash_map()
+        self.check_save_paths()
+
+        # If no save file path is selected, do nothing
+        if self.save_file_path is None:
+            return
         self.load_save_data()
-        self.event_save_slot_selection(None)
+
+        # If the selected slot is still valid, then refresh the display
+        if 0 < self.selected_slot < len(self.save_slots):
+            self.slot_combobox.current(self.selected_slot)
+            self.display_save_slot(self.save_slots[self.selected_slot])
 
     def run(self):
         """
