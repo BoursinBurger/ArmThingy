@@ -43,10 +43,53 @@
     "9471016675166627945": "Finish"
   },
   "Dialogues": {
+    "3dfdbc298f5c2794db0698deceb4dfe9": "Knaus Intro",
     "79a165bd303f0ddb58c293aad9618fa1": "Orphan Proof",
     "7369941f82a49ab4a81e4d3487523ac1": "Gasket's Shop",
     "3328b2895a995914f90d7a301c1e0b84": "I miss my old forest hermit days",
     "b2df7a80912ac10449bfc322246ac3ce": "So much to do...",
     "2dee198b6d29e8152a505500b811068f": "Oleg history"
+  },
+  "Orphans": {
+    "5274381640603482513": "Knuckle Jet 101 Orphan [F]",
+    "5504040066938683501": "Downtown Shabby Orphan [F]"
+  },
+  "Pickups": {
+    "2507511486125597824": "Knuckle Jet 101 Token [D]",
+    "8982937947482904330": "Knuckle Jet 101 Token [F]",
+    "14097930889258503363": "Downtown Shabby Token [DF]",
+    "9705470061834336553": "Downtown Shabby Bolt 1 [D]",
+    "9705470060047292128": "Downtown Shabby Bolt 2 [D]",
+    "9705470061601375524": "Downtown Shabby Bolt 3 [D]",
+    "9705470060632525455": "Downtown Shabby Bolt 1 [F]",
+    "9705470060546571670": "Downtown Shabby Bolt 2 [F]",
+    "9705470061719395356": "Downtown Shabby Bolt 3 [F]",
+    "13511962977590753083": "Nitro Depot Token [D]",
+    "18343454126224172520": "Nitro Depot Bolt 1 [D]",
+    "18343454126062667112": "Nitro Depot Bolt 2 [D]",
+    "17406649530950280890": "Deadlock Junction Bolt 1 [D]",
+    "17406649530704899243": "Deadlock Junction Bolt 2 [D]",
+    "17406649531952415884": "Deadlock Junction Bolt 3 [D]",
+    "13008083940013931624": "Deadlock Junction Token [D]",
+    "13580841223093645332": "Geargrind Yard Bolt [D]",
+    "7729514392412807882": "Tychoon Industries Bolt [D]",
+    "224086059242176234": "Tychoon Industries Interior Bolt [D]",
+    "5046624227324488566": "Tychoon Industries Interior Token [D]",
+    "10277571308086295662": "Jumbled Junkyards Bolt 1 [D]",
+    "10277571306628446441": "Jumbled Junkyards Bolt 2 [D]",
+    "10277571307965734975": "Jumbled Junkyards Bolt 3 [D]",
+    "14678476162804451367": "Jumbled Junkyards Token [D]",
+    "12792233777553834707": "Motorland's Mechanical Sewers Bolt [D]",
+    "17623161701124518835": "Motorland's Mechanical Sewers Token [D]",
+    "18126181336490911530": "Smogway District Bolt [D]",
+    "13733737000932739005": "Smogway District Token [D]",
+    "10429031927837345167": "The Freefall Fissure Bolt [D]",
+    "17623796277574224585": "Chainlink Traversal Bolt 1 [D]",
+    "17623796277637541638": "Chainlink Traversal Bolt 2 [D]",
+    "12790616277368902260": "Chainlink Traversal Token [D]",
+    "15165880191500992822": "Ratrich's Junkcut Bolt [D]",
+    "13536457463092737646": "Feed Fernus 1 [D]",
+    "10156837218730059279": "Feed Fernus 2 [D]",
+    "11598580036908908340": "Feed Fernus 3 [D]"
   }
 }
