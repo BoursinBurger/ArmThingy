@@ -7,7 +7,8 @@
       "11532584307764410729": "Head Bomb",
       "17030651912610477549": "Aerodynamic",
       "15958900357226802104": "Nitro Reserve",
-      "1134769238331329378": "Wall Dynamo"
+      "1134769238331329378": "Wall Dynamo",
+      "4179382860667549879": "Polished Helmet"
     },
     "Torso": {
       "5670864085995171669": "Plain Clothes",
@@ -57,7 +58,20 @@
       "5983683451063833549": "Auswald Bossfight [F]"
     },
     "World 3": {
-
+      "12131609553164655244": "Ski Jump [F]",
+      "1736828066586852434": "Ice Time [F]",
+      "5092888164442668672": "Ice Challenge [F]",
+      "15123192213146953248": "More Sliding [F]",
+      "15814558786595059495": "Ava's Factory [F]",
+      "6496206844755880573": "Water Tank [F]",
+      "4579359511953262143": "Freeze Time [F]",
+      "15638445775721986320": "Water Tower [F]",
+      "4922648133402659632": "Underwater Base [F]",
+      "3923106493659788874": "Icy Depths [F]",
+      "15049032458979163056": "All Knuckles on Deck [F]",
+      "17518202006306466227": "Underwater Treasure [F]",
+      "14494778792681146989": "This Needs Boats [F]",
+      "11233549455661523770": "Ava Lanche [F]"
     }
   },
   "Cutscenes": {
@@ -78,7 +92,8 @@
     "0e2f7a11d0df731438985c8be4d0d877": "You seem to get the hang of flying again [F]",
     "ef530ce09b2c7d0429a68a3c27b3bb83": "If only Hammerkid was here [F]",
     "0d56e0d77b722bf4b9f7045e03b15da3": "You found Hammerkid [F]",
-    "ceb604c34c1047c49bc8d06824ef2401": "I've been stuck up here forever [F]"
+    "ceb604c34c1047c49bc8d06824ef2401": "I've been stuck up here forever [F]",
+    "eec08e7f86b4e2e228a9ee71acaba5c7": "It's not making cuboids, it's making cat food! [F]"
   },
   "Rescued Orphans": {
     "World 1": {
@@ -102,7 +117,17 @@
       "11557135848240843534": "Auswald's Tower Orphan [F]"
     },
     "World 3": {
-
+      "10488320241997576739": "Ski Jump Orphan [F]",
+      "18355154757324659782": "Ice Time Orphan [F]",
+      "2584417638644831055": "More Sliding Orphan [F]",
+      "7545332256166316837": "Ava's Factory Orphan [F]",
+      "10732478120739614099": "Water Tank Orphan [F]",
+      "15096013670626847113": "Water Tower Orphan [F]",
+      "6124245193696874058": "Underwater Base Orphan [F]",
+      "3097108049057442052": "Icy Depths Orphan [F]",
+      "11232546648824930728": "All Knuckles on Deck Orphan [F]",
+      "9329950600175168753": "Underwater Treasure Orphan [F]",
+      "6914277311762676623": "This Needs Boats Orphan [F]"
     }
   },
   "Pickups": {
@@ -182,7 +207,42 @@
       "5680206112042319814": "Auswald's Tower Token [F]"
     },
     "World 3": {
-
+      "8016510537421280243": "Ski Jump Bolt [F]",
+      "3050473197892033579": "Ski Jump Token [F]",
+      "2507204538165328543": "Ice Time Bolt 1 [F]",
+      "2507204537395614599": "Ice Time Bolt 2 [F]",
+      "2507204537658074229": "Ice Time Bolt 3 [F]",
+      "7484500807277965135": "Ice Time Token [F]",
+      "5453741594027654991": "More Sliding Bolt [F]",
+      "1061369569001158545": "More Sliding Token [F]",
+      "9448697273126632772": "Ava's Factory Token [F]",
+      "7247213301664727439": "Water Tank Bolt 1 [F]",
+      "7247213301239237588": "Water Tank Bolt 2 [F]",
+      "2415740242972178469": "Water Tank Token [F]",
+      "891916513907957515": "Freeze Time Bolt [F]",
+      "5293297131284903485": "Freeze Time Token [F]",
+      "6771366867243308017": "Water Tower Bolt 1 [F]",
+      "6771366867760466139": "Water Tower Bolt 2 [F]",
+      "6771366867949354457": "Water Tower Bolt 3 [F]",
+      "1796253042992400521": "Water Tower Token [F]",
+      "14865061645592034036": "Underwater Base Bolt 1 [F]",
+      "14865061645995976933": "Underwater Base Bolt 2 [F]",
+      "6465433169817759824": "Underwater Base Bolt 3 [F]",
+      "2066305452036028736": "Underwater Base Token [F]",
+      "1261115389624191229": "Icy Depths Bolt 1 [F]",
+      "1261115389337467943": "Icy Depths Bolt 2 [F]",
+      "6094858114415747056": "Icy Depths Token [F]",
+      "16923036363027423754": "All Knuckles on Deck Bolt 1 [F]",
+      "9281065567923178447": "All Knuckles on Deck Bolt 2 [F]",
+      "9281065567366066942": "All Knuckles on Deck Bolt 3 [F]",
+      "9281065566117192566": "All Knuckles on Deck Bolt 4 [F]",
+      "14256671423230222999": "All Knuckles on Deck Token [F]",
+      "14032423744829998087": "Underwater Treasure Bolt [F]",
+      "9775071678381610347": "Underwater Treasure Token [F]",
+      "13518599773112510859": "This Needs Boats Bolt 1 [F]",
+      "13518599771684505574": "This Needs Boats Bolt 2 [F]",
+      "13518599772537050509": "This Needs Boats Bolt 3 [F]",
+      "18342772280642512429": "This Needs Boats Token [F]"
     }
   }
 }
