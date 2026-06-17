@@ -16,8 +16,9 @@ class SaveSlot:
     num_challenge_coins: int
     unlocked_challenge_missions: list[str]
     equipment_state: dict[str, int]
-    rescued_orphans: list[str]
+    rescued_orphans: list[str] # Removed in Save Version 16
     permanent_pickups: list[str]
+    seen_scrapbook_pages: list[str] # Added in Save Version 16
     current_anastasia_helmet_id: str
     current_anastasia_torso_id: str
     current_anastasia_glove_id: str
